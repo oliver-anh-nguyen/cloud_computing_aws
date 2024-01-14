@@ -60,18 +60,19 @@ textarea {
     width: 100%;
 }
 
-button-email {
+.button-email {
     width: 100%;
-    padding: 12px;
-    background-color: #3498db;
+    padding: 16px; /* Adjusted padding */
+    background-color: #55198b;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px; /* Increased border-radius */
     cursor: pointer;
+    font-size: 18px;
     transition: background-color 0.3s ease;
 
     &:hover {
-        background-color: #2980b9;
+        background-color: #45a049; /* Darker green color */
     }
 }
 

@@ -29,13 +29,17 @@ export default function Email() {
                 formData
             );
 
-            console.log(response.data);
+            // Parse the response body as JSON
+            const responseBody = response.data;
 
-            // Check if the response indicates success (you may need to adjust this condition)
-            if (response.status === 200) {
+            // Check if the message in the response body indicates success
+            if (responseBody.message === 'Message sent successfully!') {
+                // If successful, show the popup
                 setSubmissionStatus('success');
             } else {
+                // If not successful, handle accordingly (you can log or show an error message)
                 setSubmissionStatus('error');
+                console.error('Error:', responseBody.message);
             }
 
             setShowPopup(true);
@@ -45,7 +49,6 @@ export default function Email() {
             setShowPopup(true);
         }
     };
-
 
     const closePopup = () => {
         setShowPopup(false);
@@ -138,8 +141,6 @@ export default function Email() {
                     </div>
                 </div>
             )}
-
-
         </div>
     );
 }
