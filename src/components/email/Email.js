@@ -1,8 +1,8 @@
-import React, {useContext, useState} from 'react';
-import './Email.scss'; // Import the styles if they are in a separate file
-import { Fade } from 'react-reveal';
+import React, { useState } from 'react';
+import './Email.scss';
+import axios from 'axios';
 
-export default function Contact() {
+export default function Email() {
     const [formData, setFormData] = useState({
         messageTitle: '',
         message: '',
@@ -10,6 +10,9 @@ export default function Contact() {
         guestName: '',
         phone: '',
     });
+
+    const [showPopup, setShowPopup] = useState(false);
+    const [submissionStatus, setSubmissionStatus] = useState(null);
 
     const { messageTitle, message, email, guestName, phone } = formData;
 
@@ -19,80 +22,124 @@ export default function Contact() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Implement form submission logic here
+
+        try {
+            const response = await axios.post(
+                'https://mgv6yaurh0.execute-api.us-east-1.amazonaws.com/v1/contact', // Replace with your actual API endpoint
+                formData
+            );
+
+            console.log(response.data);
+
+            // Check if the response indicates success (you may need to adjust this condition)
+            if (response.status === 200) {
+                setSubmissionStatus('success');
+            } else {
+                setSubmissionStatus('error');
+            }
+
+            setShowPopup(true);
+        } catch (error) {
+            console.error('Error:', error);
+            setSubmissionStatus('error');
+            setShowPopup(true);
+        }
+    };
+
+
+    const closePopup = () => {
+        setShowPopup(false);
+        setSubmissionStatus(null); // Reset submission status when closing the popup
     };
 
     return (
-        <Fade bottom duration={1000} distance="20px">
-            <div className="main" id="contact">
-                <h1 className="prof-title">Send A Message</h1>
-                <div className="row">
-                    <div className="main-content-contact">
-                        {/* Updated form with larger email input and additional fields */}
-                        <form onSubmit={handleSubmit} className="contact-form">
-                            <div className="form-group">
-                                <label>Email</label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    placeholder="Your Email"
-                                    value={email}
-                                    onChange={handleChange}
-                                    required
-                                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                                    className="larger-input"
-                                />
-                            </div>
+        <div className="main" id="contact">
+            <h1 className="prof-title">Send A Message</h1>
+            <div className="row">
+                <div className="main-content-contact">
+                    <form onSubmit={handleSubmit} className="contact-form">
+                        <div className="form-group">
+                            <label>Email</label>
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Your Email"
+                                value={email}
+                                onChange={handleChange}
+                                required
+                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                                className="larger-input"
+                            />
+                        </div>
 
-                            <div className="form-group">
-                                <label>Guest Name</label>
-                                <input
-                                    type="text"
-                                    name="guestName"
-                                    placeholder="Your Name"
-                                    value={guestName}
-                                    onChange={handleChange}
-                                />
-                            </div>
+                        <div className="form-group">
+                            <label>Guest Name</label>
+                            <input
+                                type="text"
+                                name="guestName"
+                                placeholder="Your Name"
+                                value={guestName}
+                                required
+                                onChange={handleChange}
+                            />
+                        </div>
 
-                            <div className="form-group">
-                                <label>Phone (Optional)</label>
-                                <input
-                                    type="tel"
-                                    name="phone"
-                                    placeholder="Your Phone"
-                                    value={phone}
-                                    onChange={handleChange}
-                                />
-                            </div>
+                        <div className="form-group">
+                            <label>Phone (Optional)</label>
+                            <input
+                                type="tel"
+                                name="phone"
+                                placeholder="Your Phone"
+                                value={phone}
+                                onChange={handleChange}
+                            />
+                        </div>
 
-                            <div className="form-group">
-                                <label>Message Title</label>
-                                <input
-                                    type="text"
-                                    name="messageTitle"
-                                    placeholder="Title of your message"
-                                    value={messageTitle}
-                                    onChange={handleChange}
-                                />
-                            </div>
+                        <div className="form-group">
+                            <label>Message Title</label>
+                            <input
+                                type="text"
+                                name="messageTitle"
+                                placeholder="Title of your message"
+                                value={messageTitle}
+                                required
+                                onChange={handleChange}
+                            />
+                        </div>
 
-                            <div className="form-group">
-                                <label>Message</label>
-                                <textarea
-                                    name="message"
-                                    placeholder="Your Message"
-                                    value={message}
-                                    onChange={handleChange}
-                                    rows="4"
-                                />
-                            </div>
+                        <div className="form-group">
+                            <label>Message</label>
+                            <textarea
+                                name="message"
+                                placeholder="Your Message"
+                                value={message}
+                                required
+                                onChange={handleChange}
+                                rows="4"
+                            />
+                        </div>
 
-                            <button className="button-email" type="submit">Submit</button>
-                        </form>
-                    </div>
+                        <button className="button-email" type="submit">
+                            Submit
+                        </button>
+                    </form>
                 </div>
             </div>
-        </Fade>
+
+            {showPopup && (
+                <div className="popup-overlay">
+                    <div className="popup-content">
+                        {submissionStatus === 'success' ? (
+                            <p>The message was sent successfully!</p>
+                        ) : (
+                            <p>There was an error sending the message. Please try again.</p>
+                        )}
+                        <button onClick={closePopup}>Close</button>
+                    </div>
+                </div>
+            )}
+
+
+        </div>
     );
 }
