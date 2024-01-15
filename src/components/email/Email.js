@@ -123,7 +123,7 @@ export default function Email() {
                         </div>
 
                         <button className="button-email" type="submit">
-                            Submit
+                            SUBMIT
                         </button>
                     </form>
                 </div>
