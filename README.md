@@ -1,7 +1,11 @@
 # cloud_computing_aws
 Project Cloud Computing (AWS)
 
-### Technology stacks:
+### Website
+
+https://olivernguyen.dev
+
+### Technology stacks
 
 * Amazon Route53
 * Amazon CloudFront
@@ -14,6 +18,4 @@ Project Cloud Computing (AWS)
 * Amazon CloudWatch
 * ReactJS
 
-### Website
 
-https://olivernguyen.dev
